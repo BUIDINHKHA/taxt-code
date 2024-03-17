@@ -50,7 +50,7 @@ func InitRouter(
 
 	v1.V1Router(
 		// TODO: implement middleware
-		apiGroup.Group("/v1"),
+		apiGroup.Group("/demo"),
 		log,
 		config,
 	)

@@ -89,7 +89,7 @@
 
         const sel = document.querySelector('#table-body');
         sel.innerHTML = null
-        const apiUrl = '/api/v1/tax_code/search/' + Object.fromEntries(formData).cccd;
+        const apiUrl = '/api/demo/tax_code/search/' + Object.fromEntries(formData).cccd;
         fetch(apiUrl, requestOptions)
             .then(response => {
                 if (!response.ok) {
