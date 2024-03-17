@@ -40,7 +40,7 @@
 
 <form id="contact">
     <input type="text" name="cccd" placeholder="CCCD">
-    <button type="submit">Submit</button>
+    <button id="submit" type="submit">Submit</button>
 </form>
 <br>
 <div id="loading"></div>
@@ -52,7 +52,7 @@
         <th>Tên người nộp thuế</th>
         <th>Cơ quan thuế</th>
         <th>CCCD/CMT</th>
-        <th>Ngày cấp</th>
+        <th style="width: 100px">Ngày cấp</th>
         <th>Trạng thái</th>
     </tr>
     </thead>
@@ -87,10 +87,13 @@
             body: formData,
         };
 
+        const sel = document.querySelector('#table-body');
+        sel.innerHTML = null
         const apiUrl = '/api/v1/tax_code/search/' + Object.fromEntries(formData).cccd;
         fetch(apiUrl, requestOptions)
             .then(response => {
                 if (!response.ok) {
+                    hideLoading()
                     throw new Error('Network response was not ok');
                 }
                 return response.text();
@@ -99,7 +102,6 @@
                 hideLoading()
                 datas = JSON.parse(data)
                 if (datas) {
-                    const sel = document.querySelector('#table-body');
                     for (const i in datas) {
                         sel.innerHTML += `<tr>
                                     <td>${datas[i].tax_code ?? null}</td>
@@ -113,6 +115,7 @@
                 }
             })
             .catch(error => {
+                hideLoading()
                 alert('Error:' + error)
             });
     });
