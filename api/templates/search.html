@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Search Tax code</title>
+</head>
+<style>
+    button {
+        cursor: pointer;
+    }
+
+    /* creating css loader */
+
+    #loading {
+        width: 2rem;
+        height: 2rem;
+        border: 5px solid #f3f3f3;
+        border-top: 6px solid #9c41f2;
+        border-radius: 100%;
+        margin: unset;
+        visibility: hidden;
+        animation: spin 1s infinite linear;
+    }
+    #loading.display {
+        visibility: visible;
+    }
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+<body>
+
+<form id="contact">
+    <input type="text" name="cccd" placeholder="CCCD">
+    <button type="submit">Submit</button>
+</form>
+<br>
+<div id="loading"></div>
+<br>
+<table id="table" width="800px" border="1px">
+    <thead>
+    <tr>
+        <th>Mã số thuế</th>
+        <th>Tên người nộp thuế</th>
+        <th>Cơ quan thuế</th>
+        <th>CCCD/CMT</th>
+        <th>Ngày cấp</th>
+        <th>Trạng thái</th>
+    </tr>
+    </thead>
+    <tbody id="table-body">
+    </tbody>
+</table>
+
+</body>
+</html>
+<script>
+    const loader = document.querySelector("#loading");
+
+    // showing loading
+    function displayLoading() {
+        loader.classList.add("display");
+    }
+
+    // hiding loading
+    function hideLoading() {
+        loader.classList.remove("display");
+    }
+
+    // Define the API URL
+    const contactForm = document.getElementById('contact');
+
+    contactForm.addEventListener('submit', function (event) {
+        displayLoading()
+        event.preventDefault();
+        const formData = new FormData(contactForm);
+        const requestOptions = {
+            method: 'POST',
+            body: formData,
+        };
+
+        const apiUrl = 'http://localhost:8080/api/v1/tax_code/search/' + Object.fromEntries(formData).cccd;
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                hideLoading()
+                datas = JSON.parse(data)
+                if (datas) {
+                    const sel = document.querySelector('#table-body');
+                    for (const i in datas) {
+                        sel.innerHTML += `<tr>
+                                    <td>${datas[i].tax_code ?? null}</td>
+                                    <td>${datas[i].username ?? null}</td>
+                                    <td>${datas[i].tax_authority ?? null}</td>
+                                    <td>${datas[i].cccd ?? null}</td>
+                                    <td>${datas[i].date_range ?? null}</td>
+                                    <td>${datas[i].status ?? null}</td>
+                                   </tr>`
+                    }
+                }
+            })
+            .catch(error => {
+                alert('Error:' + error)
+            });
+    });
+</script>
