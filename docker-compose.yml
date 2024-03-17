@@ -6,9 +6,9 @@ services:
       context: ./api
       dockerfile: Dockerfile
     ports:
-      - 8080:8080
+      - 3000:3000
     env_file:
-      - api/.env.docker
+      - api/.env
     volumes:
       - ./api:/app
     restart: unless-stopped

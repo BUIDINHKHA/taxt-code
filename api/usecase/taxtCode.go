@@ -17,7 +17,7 @@ type TaxCodeInfo struct {
 func (t *Config) Search(taxCodeInput string) ([]entity.UserInfo, error) {
 	id := uuid.New().String()
 	// initialize a Chrome browser instance on port 4444
-	service, err := selenium.NewChromeDriverService("./chromedriver", 4444)
+	service, err := selenium.NewChromeDriverService("/usr/local/bin/chromedriver", 4444)
 	if err != nil {
 		t.log.Error(id, fmt.Sprintf("init selenium error"), err.Error())
 
